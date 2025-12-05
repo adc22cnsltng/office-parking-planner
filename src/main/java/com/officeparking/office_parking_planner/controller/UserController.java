@@ -29,15 +29,15 @@ public class UserController {
     }
 
 
-    @GetMapping("/getUserById")
+    @GetMapping("/api/users/{id}")
     public ResponseEntity<UserResponse> getUserById(@RequestParam Long id) {
         
         UserResponse response = userService.getUserById(id);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.ok(response);
     }
     
 
-    @GetMapping("/all")
+    @GetMapping("/api/users")
     public ResponseEntity<List<UserResponse>> getUsers() {
 
         List<UserResponse> responses = userService.getAllUsers();
@@ -45,7 +45,7 @@ public class UserController {
     }
     
 
-    @PostMapping("/register")
+    @PostMapping("/api/users")
     public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody RegisterUserRequest request) {
         
         UserResponse response = userService.registerUser(request);

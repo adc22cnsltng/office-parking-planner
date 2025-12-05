@@ -42,11 +42,6 @@ public class UserServiceImpl implements UserService {
                 request.getFullName()
         ));
 
-        //check if user saved correctly
-        if(user.getId() == null){
-            throw new RuntimeException("Errore durante la registrazione dell'utente");
-        }
-
         //return response with user data and success status
         return new UserResponse(user.getId(), user.getUsername(), user.getFullName());
     }
@@ -58,6 +53,7 @@ public class UserServiceImpl implements UserService {
         return new UserResponse(user.getId(), user.getUsername(), user.getFullName());
     }
 
+    @Override
     public List<UserResponse> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()
