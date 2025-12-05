@@ -20,17 +20,17 @@ public class VehicleController {
         this.vehicleService = vehicleService;
     }
 
-    @PostMapping
-    public ResponseEntity<VehicleResponse> createVehicle(
-            @Valid @RequestBody CreateVehicleRequest request
-    ) {
-        VehicleResponse response = vehicleService.createVehicleForCurrentUser(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
     @GetMapping
     public ResponseEntity<List<VehicleResponse>> getMyVehicles() {
+        
         List<VehicleResponse> vehicles = vehicleService.getVehiclesForCurrentUser();
         return ResponseEntity.ok(vehicles);
+    }
+    
+    @PostMapping
+    public ResponseEntity<VehicleResponse> createVehicle(@Valid @RequestBody CreateVehicleRequest request) {
+        
+        VehicleResponse response = vehicleService.createVehicleForCurrentUser(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

@@ -7,6 +7,9 @@ import com.officeparking.office_parking_planner.dto.response.UserResponse;
 import com.officeparking.office_parking_planner.model.entity.User;
 import com.officeparking.office_parking_planner.repository.UserRepository;
 import com.officeparking.office_parking_planner.service.UserService;
+
+import java.util.List;
+
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import jakarta.transaction.Transactional;
@@ -19,26 +22,46 @@ public class UserServiceImpl implements UserService {
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
+    }   
 
     @Override
     public UserResponse registerUser(RegisterUserRequest request) {
         
-        //verifica se l'utente esiste già
+        //verify if user already exists
         if(userRepository.findByUsername(request.getUsername()).isPresent()){
             throw new RuntimeException("L'utente esiste già");
         }
 
-        //calcolo della passwrord hashata con BCrypt
+        //create hashed password with BCrypt
         String hashedPassword = BCrypt.hashpw(request.getPassword(), BCrypt.gensalt());
 
-        //creazione e salvataggio dell'utente
+        //create and save new user
         User user = userRepository.save(new User(
                 request.getUsername(),
                 hashedPassword,
                 request.getFullName()
         ));
 
-        return new UserResponse(user);
+        //check if user saved correctly
+        if(user.getId() == null){
+            throw new RuntimeException("Errore durante la registrazione dell'utente");
+        }
+
+        //return response with user data and success status
+        return new UserResponse(user.getId(), user.getUsername(), user.getFullName());
+    }
+
+    @Override
+    public UserResponse getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato con ID: " + id));
+        return new UserResponse(user.getId(), user.getUsername(), user.getFullName());
+    }
+
+    public List<UserResponse> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(user -> new UserResponse(user.getId(), user.getUsername(), user.getFullName()))
+                .toList();
     }
 }

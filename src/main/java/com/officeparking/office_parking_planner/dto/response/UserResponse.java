@@ -7,18 +7,18 @@ public class UserResponse {
     private String username;
     private String fullName;
 
-    // costruttore vuoto
+    // empty constructor
     public UserResponse() {
     }
 
-    // costruttore con tutti i campi
+    // constructor with all fields
     public UserResponse(Long id, String username, String fullName) {
         this.id = id;
         this.username = username;
         this.fullName = fullName;
     }
 
-    // costruttore da entità User
+    // constructor from User entity
     public UserResponse(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
