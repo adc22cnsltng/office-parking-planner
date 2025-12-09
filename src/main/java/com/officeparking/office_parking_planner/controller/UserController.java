@@ -8,7 +8,6 @@ import com.officeparking.office_parking_planner.service.UserService;
 import jakarta.validation.Valid;
 import java.util.List;
 
-import org.springframework.boot.micrometer.observation.autoconfigure.ObservationProperties.Http;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +28,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/api/users/{id}")
+    @GetMapping("/get{id}")
     public ResponseEntity<UserResponse> getUserById(@RequestParam Long id) {
         
         UserResponse response = userService.getUserById(id);
@@ -37,7 +36,7 @@ public class UserController {
     }
     
 
-    @GetMapping("/api/users")
+    @GetMapping("/getAll")
     public ResponseEntity<List<UserResponse>> getUsers() {
 
         List<UserResponse> responses = userService.getAllUsers();
@@ -45,7 +44,7 @@ public class UserController {
     }
     
 
-    @PostMapping("/api/users")
+    @PostMapping("/register")
     public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody RegisterUserRequest request) {
         
         UserResponse response = userService.registerUser(request);
