@@ -15,6 +15,9 @@ public class User {
     @Column(name = "username", nullable = false, unique = true, length = 20)
     private String username;
 
+    @Column(name = "email", nullable = false, unique = true, length = 50)
+    private String email;
+
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
@@ -28,13 +31,13 @@ public class User {
     private Boolean isEnabled;
 
     
-    // Costruttore vuoto richiesto da JPA
+    // Empty constructor required by JPA
     protected User() {
     }
 
-    // Costruttore di comodo (non obbligatorio, ma utile)
-    public User(String username, String passwordHash, String fullName) {
-        this.username = username;
+    public User(String email, String passwordHash, String fullName) {
+        this.email = email;
+        this.username = email; // using email as username
         this.passwordHash = passwordHash;
         this.fullName = fullName;
         this.createdAt = LocalDateTime.now();
@@ -66,15 +69,15 @@ public class User {
         return isEnabled;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
 
     // Setters   
 
     public void setId(Long id) {
         this.id = id;
-    }   
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public void setPasswordHash(String passwordHash) {
@@ -91,6 +94,10 @@ public class User {
 
      public void setIsEnabled(Boolean isEnabled) {
         this.isEnabled = isEnabled;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }

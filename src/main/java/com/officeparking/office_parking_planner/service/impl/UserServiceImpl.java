@@ -10,7 +10,7 @@ import com.officeparking.office_parking_planner.service.UserService;
 
 import java.util.List;
 
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.transaction.Transactional;
 
@@ -19,9 +19,11 @@ import jakarta.transaction.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }   
 
     @Override
@@ -33,17 +35,23 @@ public class UserServiceImpl implements UserService {
         }
 
         //create hashed password with BCrypt
-        String hashedPassword = BCrypt.hashpw(request.getPassword(), BCrypt.gensalt());
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
 
         //create and save new user
         User user = userRepository.save(new User(
                 request.getUsername(),
-                hashedPassword,
+                encodedPassword,
                 request.getFullName()
         ));
 
+        User savedUser = userRepository.save(user);
+        
         //return response with user data and success status
-        return new UserResponse(user.getId(), user.getUsername(), user.getFullName());
+        return new UserResponse(
+            savedUser.getId(), 
+            savedUser.getUsername(), 
+            savedUser.getFullName()
+        );
     }
 
     @Override
